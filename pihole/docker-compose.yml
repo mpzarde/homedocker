@@ -21,11 +21,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.entrypoints=http"
-      - "traefik.http.routers.pihole.rule=Host(`ph1.home.truecool.com`)"
+      - "traefik.http.routers.pihole.rule=Host(`ph2.home.truecool.com`)"
       - "traefik.http.middlewares.pihole-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.pihole.middlewares=pihole-https-redirect"
       - "traefik.http.routers.pihole-secure.entrypoints=https"
-      - "traefik.http.routers.pihole-secure.rule=Host(`ph1.home.truecool.com`)"
+      - "traefik.http.routers.pihole-secure.rule=Host(`ph2.home.truecool.com`)"
       - "traefik.http.routers.pihole-secure.tls=true"
       - "traefik.http.routers.pihole-secure.service=pihole"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
