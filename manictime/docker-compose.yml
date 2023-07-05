@@ -1,0 +1,26 @@
+version: '3.3'
+services:
+  manictime:
+    image: manictime/manictimeserver
+    container_name: manictime
+    hostname: time
+    volumes:
+      - /opt/buddy-nfs/manictime/data:/app/Data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.manictime.entrypoints=http"
+      - "traefik.http.routers.manictime.rule=Host(`time.home.truecool.com`)"
+      - "traefik.http.middlewares.manictime-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.manictime.middlewares=manictime-https-redirect"
+      - "traefik.http.routers.manictime-secure.entrypoints=https"
+      - "traefik.http.routers.manictime-secure.rule=Host(`time.home.truecool.com`)"
+      - "traefik.http.routers.manictime-secure.tls=true"
+      - "traefik.http.routers.manictime-secure.service=manictime"
+      - "traefik.http.services.manictime.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+    restart: unless-stopped
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true

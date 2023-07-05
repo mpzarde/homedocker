@@ -1,0 +1,27 @@
+version: "3.3"
+
+services:
+  rstudio:
+    image: "rocker/rstudio:latest"
+    container_name: "rstudio"
+    restart: "unless-stopped"
+    networks:
+      - proxy
+    environment:
+      - DISABLE_AUTH=true
+    volumes:
+      - /opt/buddy-nfs/rstudio:/home/rstudio
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rstudio.entrypoints=http"
+      - "traefik.http.routers.rstudio.rule=Host(`rstudio.home.truecool.com`)"
+      - "traefik.http.middlewares.rstudio-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.rstudio.middlewares=rstudio-https-redirect"
+      - "traefik.http.routers.rstudio-secure.entrypoints=https"
+      - "traefik.http.routers.rstudio-secure.rule=Host(`rstudio.home.truecool.com`)"
+      - "traefik.http.routers.rstudio-secure.tls=true"
+      - "traefik.http.routers.rstudio-secure.service=rstudio"
+      - "traefik.http.services.rstudio.loadbalancer.server.port=8787"
+networks:
+  proxy:
+    external: true

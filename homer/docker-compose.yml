@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+  homer:
+    image: b4bz/homer
+    container_name: homer
+    volumes:
+      - /opt/buddy-nfs/homer/data:/www/assets
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homer.entrypoints=http"
+      - "traefik.http.routers.homer.rule=Host(`homer.home.truecool.com`)"
+      - "traefik.http.middlewares.homer-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.homer.middlewares=homer-https-redirect"
+      - "traefik.http.routers.homer-secure.entrypoints=https"
+      - "traefik.http.routers.homer-secure.rule=Host(`homer.home.truecool.com`)"
+      - "traefik.http.routers.homer-secure.tls=true"
+      - "traefik.http.routers.homer-secure.service=homer"
+      - "traefik.http.services.homer.loadbalancer.server.port=8080"
+      - "traefik.http.routers.homer.middlewares=homer-auth"
+      - "traefik.http.middlewares.homer-auth.basicauth.users=mpzarde:$$apr1$$pVfPutBO$$McQ2.BLcV8lPHAW/6HJuu1"
+      - "traefik.docker.network=proxy"
+    environment:
+      - UID=1000
+      - GID=1000
+    restart: unless-stopped
+    networks:
+      - proxy
+networks:
+  proxy:
+    external: true
