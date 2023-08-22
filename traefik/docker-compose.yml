@@ -9,6 +9,11 @@ services:
       - no-new-privileges:true
     networks:
       - proxy
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: '10m'
     ports:
       - 80:80
       - 443:443

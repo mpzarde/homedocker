@@ -18,6 +18,11 @@ services:
       - 1.0.0.1
     networks:
       - proxy
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: '10m'
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.entrypoints=http"

@@ -11,16 +11,26 @@ services:
       - "traefik.http.routers.manictime.entrypoints=http"
       - "traefik.http.routers.manictime.rule=Host(`time.home.truecool.com`)"
       - "traefik.http.middlewares.manictime-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.manictime.middlewares=manictime-https-redirect"
+      - "traefik.http.middlewares.manictime-headers.headers.customRequestHeaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.manictime-headers.headers.customRequestHeaders.X-Forwarded-Host=https"
+      - "traefik.http.middlewares.manictime-headers.headers.customResponseHeaders.X-Forwarded-Proto=https"
+      - "traefik.http.middlewares.manictime-headers.headers.customResponseHeaders.X-Forwarded-Host=https"
+      - "traefik.http.routers.manictime.middlewares=manictime-https-redirect,manictime-headers"
       - "traefik.http.routers.manictime-secure.entrypoints=https"
       - "traefik.http.routers.manictime-secure.rule=Host(`time.home.truecool.com`)"
       - "traefik.http.routers.manictime-secure.tls=true"
       - "traefik.http.routers.manictime-secure.service=manictime"
       - "traefik.http.services.manictime.loadbalancer.server.port=8080"
+      - "traefik.http.services.manictime.loadbalancer.passhostheader=true"
       - "traefik.docker.network=proxy"
     restart: unless-stopped
     networks:
       - proxy
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: '50m'
 networks:
   proxy:
     external: true

@@ -25,6 +25,11 @@ services:
     restart: unless-stopped
     networks:
       - proxy
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: '50m'
 networks:
   proxy:
     external: true
