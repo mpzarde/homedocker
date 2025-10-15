@@ -1,0 +1,29 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "9005:8080"
+    volumes:
+      - ./ollama-router:/app/ollama-router
+      - ./open-webui:/app/backend/data
+    environment:
+      - OLLAMA_BASE=http://m2ultra.home.truecool.com:11434
+      - CLASSIFIER=qwen2.5:7b-instruct
+      - VERBOSE_LOGGING=false
+      - LOG_HEADERS=false
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    expose:
+      - "8000"
+    networks:
+      - internal
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  internal:
+    driver: bridge

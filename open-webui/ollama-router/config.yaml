@@ -1,0 +1,17 @@
+# Ollama Router Configuration
+# Maps intents to specific Ollama models
+
+models:
+  dev: "qwen2.5-coder:32b"           # Coding, debugging, programming tasks
+  writing: "llama3.1:8b"             # Writing, editing, creative tasks
+  general: "codestral:22b"           # General knowledge, fallback
+  classifier: "qwen2.5:7b-instruct"  # Intent classification and capability assessment
+
+ollama:
+  base_url: "http://m2ultra.home.truecool.com:11434"
+
+router:
+  default_to_local_on_error: true
+  verbose_logging: false
+  session_timeout: 30
+

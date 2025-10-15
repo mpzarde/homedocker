@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.n8n.entrypoints=http"
+      - "traefik.http.routers.n8n.rule=Host(`n8n.home.truecool.com`)"
+      - "traefik.http.middlewares.n8n-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.n8n.middlewares=n8n-https-redirect"
+      - "traefik.http.routers.n8n-secure.entrypoints=https"
+      - "traefik.http.routers.n8n-secure.rule=Host(`n8n.home.truecool.com`)"
+      - "traefik.http.routers.n8n-secure.tls=true"
+      - "traefik.http.routers.n8n-secure.service=n8n"
+      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
+      - "traefik.docker.network=proxy"
+    restart: unless-stopped
+    networks:
+      - proxy
+    volumes:
+      - n8ndata:/home/node/.n8n
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=admin
+      - WEBHOOK_URL=https://n8n.home.truecool.com/
+      - VUE_APP_URL_BASE_API=https://n8n.home.truecool.com/
+    logging:
+      driver: json-file
+      options:
+        max-file: '1'
+        max-size: '50m'
+
+networks:
+  proxy:
+    external: true
+
+volumes:
+  n8ndata:
