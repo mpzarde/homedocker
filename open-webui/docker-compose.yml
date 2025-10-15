@@ -13,7 +13,8 @@ services:
       - CLASSIFIER=qwen2.5:7b-instruct
       - VERBOSE_LOGGING=false
       - LOG_HEADERS=false
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    env_file:
+      - .env
     expose:
       - "8000"
     networks:
