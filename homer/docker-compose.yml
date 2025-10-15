@@ -22,6 +22,7 @@ services:
     environment:
       - UID=1000
       - GID=1000
+      - INIT_ASSETS=0
     restart: unless-stopped
     networks:
       - proxy

@@ -4,6 +4,7 @@ services:
   rstudio:
     image: "rocker/rstudio:latest"
     container_name: "rstudio"
+    hostname: "rstudio"
     restart: "unless-stopped"
     networks:
       - proxy
@@ -13,9 +14,9 @@ services:
         max-file: '1'
         max-size: '50m'
     environment:
-      - DISABLE_AUTH=true
+      - ROOT=true
     volumes:
-      - /opt/buddy-nfs/rstudio:/home/rstudio
+      - /opt/buddy-nfs/rstudio:/home
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.rstudio.entrypoints=http"
